@@ -11,5 +11,9 @@
     "koa"
   ],
   "author": "liutaochange@163.com",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.7.0",
+    "koa-router": "^7.4.0"
+  }
 }

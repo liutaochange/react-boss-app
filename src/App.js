@@ -1,8 +1,13 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+import React, { Component } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { getUserInfo } from "@/api/index";
 class App extends Component {
+  componentDidMount () {
+    getUserInfo().then(res => {
+      console.log(res)
+    })
+  }
   render() {
     return (
       <div className="App">
