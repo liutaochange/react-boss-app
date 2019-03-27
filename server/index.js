@@ -2,17 +2,17 @@ const Koa = require("koa");
 const Router = require("koa-router"); // 引入路由中间件
 const app = new Koa();
 const router = new Router(); // 实例化路由
-
-router.get("/api/userInfo", async ctx => {
-  console.log(ctx);
-  ctx.body = JSON.stringify({
-    code: "0",
-    data: {
-      name: "web"
-    }
-  });
+const mongoose = require("./mongoose/index"); // 引入mongoose
+// 创建连接
+mongoose.connection.on("connected", () => {
+  console.log("connect success");
 });
+// 引入schema
+require('./mongoose/schema/index')
+// 路由模块化 用户信息
+const user = require('./router/user.js');
+router.use('/user', user.routes(), user.allowedMethods());
 
-app.use(router.routes());
+app.use(router.routes()).use(router.allowedMethods());
 
 app.listen(5566);
