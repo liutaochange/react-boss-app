@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { getUserInfo } from "@/api/index";
+import { getUserInfo, addUser } from "@/api/index";
 class App extends Component {
   componentDidMount () {
+    addUser().then(res => {
+      console.log(res)
+    })
     getUserInfo().then(res => {
       console.log(res)
     })

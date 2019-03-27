@@ -5,4 +5,6 @@ const request = axios.create({
 })
 
 // 获取用户信息
-export const getUserInfo = () => request.get('/api/userInfo')
+export const getUserInfo = () => request.get('/user/info')
+// 增加用户
+export const addUser = () => request.get('/user/add')
