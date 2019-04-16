@@ -2,14 +2,18 @@ import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { getUserInfo, addUser } from "@/api/index";
+import { withRouter } from "react-router-dom";
 class App extends Component {
-  componentDidMount () {
+  componentDidMount() {
     addUser().then(res => {
-      console.log(res)
-    })
+      console.log(res);
+    });
     getUserInfo().then(res => {
-      console.log(res)
-    })
+      console.log(res);
+    });
+  }
+  toLogin = () => {
+    this.props.history.push("/login.html");
   }
   render() {
     return (
@@ -19,18 +23,16 @@ class App extends Component {
           <p>
             Edit <code>src/App.js</code> and save to reload.
           </p>
-          <a
+          <p
             className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
+            onClick={this.toLogin}
           >
-            Learn React
-          </a>
+            login
+          </p>
         </header>
       </div>
     );
   }
 }
 
-export default App;
+export default withRouter(App);
