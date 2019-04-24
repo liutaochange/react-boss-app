@@ -8,12 +8,11 @@ import {
 import Loading from "@/components/loading/index.js";
 const App = lazy(() => import("@/App.js"));
 const Login = lazy(() => import("@/pages/login"));
+const Register = lazy(() => import("@/pages/register"));
 const Routers = () => (
   <Router>
     <Suspense
-      fallback={() => {
-        Loading();
-      }}
+      fallback={<Loading />}
     >
       <Switch>
         <Redirect exact path="/" to="/index.html" />
@@ -26,6 +25,11 @@ const Routers = () => (
           exact
           path="/login.html"
           component={props => <Login {...props} />}
+        />
+        <Route
+          exact
+          path="/register.html"
+          component={props => <Register {...props} />}
         />
       </Switch>
     </Suspense>
