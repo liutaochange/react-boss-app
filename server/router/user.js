@@ -7,7 +7,7 @@ const userInfo = {
   work: "js",
   age: "20"
 };
-router.get("/add", async ctx => {
+router.get("/register", async ctx => {
   let newUser = new model(userInfo);
   let response;
   await newUser
@@ -31,7 +31,7 @@ router.get("/add", async ctx => {
   ctx.body = response;
 });
 
-router.get("/info", async ctx => {
+router.get("/login", async ctx => {
   let response;
   await model.find().exec().then((res) => {
     if (!res[0].name) {

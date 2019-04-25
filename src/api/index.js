@@ -6,9 +6,12 @@ const request = axios.create({
 });
 
 // 获取用户信息
-export const getUserInfo = () => request.get("/user/info");
+export const login = (user, password) => request.get("/user/login", {
+  user,
+  password,
+});
 // 增加用户
-export const addUser = () => request.get("/user/add");
+export const register = () => request.get("/user/register");
 
 // 拦截请求
 axios.interceptors.request.use(function(config) {

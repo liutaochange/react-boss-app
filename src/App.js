@@ -1,17 +1,8 @@
 import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { getUserInfo, addUser } from "@/api/index";
 import { withRouter } from "react-router-dom";
 class App extends Component {
-  componentDidMount() {
-    addUser().then(res => {
-      console.log(res);
-    });
-    getUserInfo().then(res => {
-      console.log(res);
-    });
-  }
   toLogin = () => {
     this.props.history.push("/login.html");
   }

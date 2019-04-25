@@ -1,34 +1,58 @@
 import React, { useState, useEffect } from "react";
 import Logo from "@/components/logo";
-import { List, InputItem, WingBlank, WhiteSpace, Button } from "antd-mobile";
+import { List, InputItem, WingBlank, WhiteSpace, Button, Toast } from "antd-mobile";
 import { withRouter } from "react-router-dom";
-
+import { login } from "@/api/index";
+import Store from "@/assets/js/utils";
 const Login = props => {
-  const [user, setUser] = useState('');
-  const [password, setPassword] = useState('');
-  const [msg, setMsg] = useState('');
-  const login = () => {
+  let [user, setUser] = useState("");
+  let [password, setPassword] = useState("");
+  const submitLogin = () => {
+    if (user === '' || user.length < 4) {
+      Toast.info('用户名不能少于4位', 1);
+      return false;
+    }
+    if (password === '' || password.length < 6) {
+      Toast.info('密码不能少于6位', 1);
+      return false;
+    }
     useEffect(() => {
-    
-    })
-  }
+      login(user, password).then(res => {
+        if (res.code === '0') {
+          Store.set('__USER_INGO__', res.data);
+          props.history.push('index.html');
+        }
+      });
+    });
+  };
   return (
     <div>
       <Logo />
       <WingBlank>
         <List>
-          {msg?<p className='error-msg'>{msg}</p>:null}
           <WhiteSpace />
-          <InputItem value={user} placeholder="请输入用户名" onChange={(val) => {
-            console.log(val)
-          }}>用户</InputItem>
+          <InputItem
+            value={user}
+            placeholder="请输入用户名"
+            onChange={val => {
+              setUser(val);
+            }}
+          >
+            用户
+          </InputItem>
           <WhiteSpace />
-          <InputItem value={password} placeholder="请输入密码" onChange={(val) => {
-            console.log(val)
-          }}>密码</InputItem>
+          <InputItem
+            value={password}
+            placeholder="请输入密码"
+            onChange={val => {
+              setPassword(val);
+            }}
+          >
+            密码
+          </InputItem>
         </List>
         <WhiteSpace />
-        <Button onClick={login}>登录</Button>
+        <Button onClick={submitLogin}>登录</Button>
         <WhiteSpace />
         <Button
           onClick={() => {
