@@ -2,9 +2,8 @@ const Router = require("koa-router");
 const router = new Router();
 const mongoose = require("mongoose");
 const userModel = mongoose.model("user");
-const { sign } = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const screct = "react-boss-app";
-const jwt = require("koa-jwt")({ screct });
 router.post("/register", async ctx => {
   const userInfo = ctx.request.body;
   if (userInfo && userInfo.user && userInfo.password && userInfo.type) {
@@ -12,7 +11,7 @@ router.post("/register", async ctx => {
     let result = await userModel.findOne({ name: user }).exec();
     if (!result) {
       // 生成token, secret作为密钥，expiresIn为失效时间，看情况，一般也不会太久
-      const token = sign({ user }, screct, { expiresIn: "5h" });
+      const token = jwt.sign({ user }, screct, { expiresIn: "5h" });
       let newUser = new userModel({
         ...userInfo,
         name: user,
@@ -23,7 +22,11 @@ router.post("/register", async ctx => {
         .then(res => {
           return {
             code: 0,
-            data: res
+            data: {
+              user,
+              type: res.type,
+              token: res.token
+            }
           };
         })
         .catch(err => {
@@ -50,22 +53,18 @@ router.post("/register", async ctx => {
 
 router.post("/login", async ctx => {
   const userInfo = ctx.request.body;
-  if (userInfo && userInfo.user && userInfo.password && userInfo.type) {
+  if (userInfo && userInfo.user && userInfo.password) {
     let { user, password } = userInfo;
     let result = await userModel.findOne({ name: user }).exec();
     if (result && result.name === user && result.password === password) {
       // 生成token, secret作为密钥，expiresIn为失效时间，看情况，一般也不会太久
-      const token = sign({ user }, screct, { expiresIn: "5h" });
-      let newUser = new userModel({
-        ...userInfo,
-        name: user,
-        token
-      });
-      newUser.findOneAndUpdate({name: user}, {token});
+      const token = jwt.sign({ user }, screct, { expiresIn: "5h" });
+      await userModel.findOneAndUpdate({name: user}, {token}).exec();
       ctx.body = {
         code: 0,
         data: {
-          ...result,
+          user: user,
+          type: result.type,
           token,
         },
         msg: "登录成功"

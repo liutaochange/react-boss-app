@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Logo from "@/components/logo";
 import { List, InputItem, WingBlank, WhiteSpace, Button, Toast } from "antd-mobile";
 import { withRouter } from "react-router-dom";
@@ -16,15 +16,13 @@ const Login = props => {
       Toast.info('密码不能少于6位', 1);
       return false;
     }
-    useEffect(() => {
-      login(user, password).then(res => {
-        if (res.code === '0') {
-          Store.set('__USER_INFO__', res.data);
-          props.history.push('index.html');
-        }
-      }).catch(err => {
-				Toast.info(err, 1);
-			});
+    login(user, password).then(res => {
+      if (res.data.code === 0) {
+        Store.set('__USER_INFO__', res.data.data);
+        props.history.push('index.html');
+      }
+    }).catch(err => {
+      Toast.info(err, 1);
     });
   };
   return (
@@ -43,6 +41,7 @@ const Login = props => {
           </InputItem>
           <InputItem
             value={password}
+            type="password"
             placeholder="请输入密码"
             onChange={val => {
               setPassword(val);

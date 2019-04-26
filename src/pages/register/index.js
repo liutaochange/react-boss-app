@@ -31,13 +31,14 @@ const Register = props => {
       return false;
     }
 		register(user, password, type).then(res => {
-			if (res.code === 0) {
-				Store.set("__USER_INFO__", res.data);
+			if (res.data.code === 0) {
+				Store.set("__USER_INFO__", res.data.data);
 				props.history.push("index.html");
-			}
+			} else {
+        Toast.info(res.data.msg, 1);
+      }
 		}).catch(err => {
 			console.log(err);
-			// Toast.info(err, 1);
 		});
   };
   const RadioItem = Radio.RadioItem;
