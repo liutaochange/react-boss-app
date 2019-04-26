@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Logo from "@/components/logo";
 import {
   List,
@@ -6,85 +6,98 @@ import {
   Radio,
   WingBlank,
   WhiteSpace,
-  Button
+  Button,
+  Toast
 } from "antd-mobile";
-import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
-
-class Register extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: "",
-      pwd: "",
-      repeatpwd: "",
-      type: "genius" // 或者boss
-    };
-
-    this.handleRegister = this.handleRegister.bind(this);
-  }
-  handleChange(key, val) {
-    this.setState({
-      [key]: val
-    });
-  }
-  handleRegister() {
-    this.props.regisger(this.state);
-  }
-  render() {
-    const RadioItem = Radio.RadioItem;
-    return (
-      <div>
-        {this.props.redirectTo ? <Redirect to={this.props.redirectTo} /> : null}
-        <Logo />
+import { withRouter } from "react-router-dom";
+import { register } from "@/api/index";
+import Store from "@/assets/js/utils";
+const Register = props => {
+  let [user, setUser] = useState("");
+  let [password, setPassword] = useState("");
+  let [repeatpwd, setRepeatpwd] = useState("");
+  let [type, setType] = useState("genius");
+  const handleRegister = () => {
+    if (user === "" || user.length < 2) {
+      Toast.info("用户名不能少于2位", 1);
+      return false;
+    }
+    if (password === "" || password.length < 6) {
+      Toast.info("密码不能少于6位", 1);
+      return false;
+		}
+		if (password !== repeatpwd) {
+      Toast.info("密码不一致", 1);
+      return false;
+    }
+		register(user, password, type).then(res => {
+			if (res.code === 0) {
+				Store.set("__USER_INFO__", res.data);
+				props.history.push("index.html");
+			}
+		}).catch(err => {
+			console.log(err);
+			// Toast.info(err, 1);
+		});
+  };
+  const RadioItem = Radio.RadioItem;
+  return (
+    <div>
+      <Logo />
+      <WingBlank>
         <List>
-          {this.props.msg ? (
-            <p className="error-msg">{this.props.msg}</p>
-          ) : null}
-          <InputItem onChange={v => this.handleChange("user", v)}>
+          <InputItem
+            value={user}
+            placeholder="请输入用户名"
+            onChange={val => {
+              setUser(val);
+            }}
+          >
             用户名
           </InputItem>
-          <WhiteSpace />
           <InputItem
             type="password"
-            onChange={v => this.handleChange("pwd", v)}
+            value={password}
+            placeholder="请输入密码"
+            onChange={val => {
+              setPassword(val);
+            }}
           >
             密码
           </InputItem>
-          <WhiteSpace />
           <InputItem
             type="password"
-            onChange={v => this.handleChange("repeatpwd", v)}
+            value={repeatpwd}
+            placeholder="请确认密码"
+            onChange={val => {
+              setRepeatpwd(val);
+            }}
           >
             确认密码
           </InputItem>
-          <WhiteSpace />
           <RadioItem
-            checked={this.state.type == "genius"}
-            onChange={() => this.handleChange("type", "genius")}
+            checked={type === "genius"}
+            onChange={() => {
+							setType("genius")
+						}}
           >
             牛人
           </RadioItem>
           <RadioItem
-            checked={this.state.type == "boss"}
-            onChange={() => this.handleChange("type", "boss")}
+            checked={type === "boss"}
+            onChange={() => {
+							setType("boss")
+						}}
           >
             BOSS
           </RadioItem>
           <WhiteSpace />
-          <Button type="primary" onClick={this.handleRegister}>
-            注册{" "}
+          <Button type="primary" onClick={handleRegister}>
+            注册
           </Button>
         </List>
-      </div>
-    );
-  }
-}
-const mapStateToProps = () => {
-  return {};
+      </WingBlank>
+    </div>
+  );
 };
-const mapDispatchToProps = () => {};
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Register);
+export default withRouter(Register);

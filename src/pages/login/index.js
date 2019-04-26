@@ -8,8 +8,8 @@ const Login = props => {
   let [user, setUser] = useState("");
   let [password, setPassword] = useState("");
   const submitLogin = () => {
-    if (user === '' || user.length < 4) {
-      Toast.info('用户名不能少于4位', 1);
+    if (user === '' || user.length < 2) {
+      Toast.info('用户名不能少于2位', 1);
       return false;
     }
     if (password === '' || password.length < 6) {
@@ -19,10 +19,12 @@ const Login = props => {
     useEffect(() => {
       login(user, password).then(res => {
         if (res.code === '0') {
-          Store.set('__USER_INGO__', res.data);
+          Store.set('__USER_INFO__', res.data);
           props.history.push('index.html');
         }
-      });
+      }).catch(err => {
+				Toast.info(err, 1);
+			});
     });
   };
   return (
@@ -30,7 +32,6 @@ const Login = props => {
       <Logo />
       <WingBlank>
         <List>
-          <WhiteSpace />
           <InputItem
             value={user}
             placeholder="请输入用户名"
@@ -40,7 +41,6 @@ const Login = props => {
           >
             用户
           </InputItem>
-          <WhiteSpace />
           <InputItem
             value={password}
             placeholder="请输入密码"
