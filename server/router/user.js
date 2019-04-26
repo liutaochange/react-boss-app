@@ -49,30 +49,39 @@ router.post("/register", async ctx => {
 });
 
 router.post("/login", async ctx => {
-  const user = ctx.request.body;
-  if (user && user.user && user.password && user.type) {
-    let { user, password, type } = user;
-    // 生成token, secret作为密钥，expiresIn为失效时间，看情况，一般也不会太久
-    const token = sign({ user }, screct, { expiresIn: "5h" });
+  const userInfo = ctx.request.body;
+  if (userInfo && userInfo.user && userInfo.password && userInfo.type) {
+    let { user, password } = userInfo;
+    let result = await userModel.findOne({ name: user }).exec();
+    if (result && result.name === user && result.password === password) {
+      // 生成token, secret作为密钥，expiresIn为失效时间，看情况，一般也不会太久
+      const token = sign({ user }, screct, { expiresIn: "5h" });
+      let newUser = new userModel({
+        ...userInfo,
+        name: user,
+        token
+      });
+      newUser.findOneAndUpdate({name: user}, {token});
+      ctx.body = {
+        code: 0,
+        data: {
+          ...result,
+          token,
+        },
+        msg: "登录成功"
+      };
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: "用户名和账号不匹配",
+        data: {}
+      };
+    }
+  } else {
+    ctx.body = {
+      code: 1,
+      msg: "请求参数错误"
+    };
   }
-  let response;
-  await model
-    .find()
-    .exec()
-    .then(res => {
-      if (!res[0].name) {
-        response = JSON.stringify({
-          code: 1,
-          msg: "获取用户信息失败"
-        });
-      } else {
-        response = JSON.stringify({
-          code: 0,
-          msg: "获取用户信息成功",
-          data: res
-        });
-      }
-    });
-  ctx.body = response;
 });
 module.exports = router;
