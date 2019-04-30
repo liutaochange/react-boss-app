@@ -27,6 +27,7 @@ app.use((ctx, next) => {
     }
   });
 });
+
 // token 验证失败的时候会抛出401错误，因此需要添加错误处理，而且要放在 app.use(koajwt()) 之前，否则不执行
 app.use(
   koajwt({
