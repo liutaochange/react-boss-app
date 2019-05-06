@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Logo from "@/components/logo";
+import Logo from "Components/logo";
 import { List, InputItem, WingBlank, WhiteSpace, Button, Toast } from "antd-mobile";
 import { withRouter } from "react-router-dom";
 import { login } from "@/api/index";
-import Store from "@/assets/js/utils";
+import Store from "Assets/js/utils";
 const Login = props => {
   let [user, setUser] = useState("");
   let [password, setPassword] = useState("");
@@ -19,7 +19,11 @@ const Login = props => {
     login(user, password).then(res => {
       if (res.data.code === 0) {
         Store.set('__USER_INFO__', res.data.data);
-        props.history.push('index.html');
+        if (res.data.data.type === 'genius') {
+          props.history.push('index.html');
+        } else {
+          props.history.push('index.html');
+        }
       }
     }).catch(err => {
       Toast.info(err, 1);

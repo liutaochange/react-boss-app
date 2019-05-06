@@ -5,10 +5,10 @@ import {
   Switch,
   Redirect
 } from "react-router-dom";
-import Loading from "@/components/loading/index.js";
+import Loading from "Components/loading/index.js";
 const App = lazy(() => import("@/App.js"));
-const Login = lazy(() => import("@/pages/login"));
-const Register = lazy(() => import("@/pages/register"));
+const Login = lazy(() => import("Pages/login"));
+const Register = lazy(() => import("Pages/register"));
 const Routers = () => (
   <Router>
     <Suspense

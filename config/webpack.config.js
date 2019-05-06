@@ -265,7 +265,11 @@ module.exports = function(webpackEnv) {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
-        '@': path.resolve(__dirname, '../src')
+        '@': path.resolve(__dirname, '../src'),
+        'Assets': path.resolve(__dirname, '../src/assets'),
+        'Pages': path.resolve(__dirname, '../src/pages'),
+        'Components': path.resolve(__dirname, '../src/components'),
+        'Redux': path.resolve(__dirname, '../src/redux')
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding

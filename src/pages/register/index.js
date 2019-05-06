@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Logo from "@/components/logo";
+import Logo from "Components/logo";
 import {
   List,
   InputItem,
@@ -11,7 +11,9 @@ import {
 } from "antd-mobile";
 import { withRouter } from "react-router-dom";
 import { register } from "@/api/index";
-import Store from "@/assets/js/utils";
+import { connect } from "react-redux";
+import Store from "Assets/js/utils";
+import { changeUserInfo } from 'Redux/action/index';
 const Register = props => {
   let [user, setUser] = useState("");
   let [password, setPassword] = useState("");
@@ -32,8 +34,13 @@ const Register = props => {
     }
 		register(user, password, type).then(res => {
 			if (res.data.code === 0) {
-				Store.set("__USER_INFO__", res.data.data);
-				props.history.push("index.html");
+        Store.set("__USER_INFO__", res.data.data);
+        props.changeUserInfo(res.data.data)
+				if (res.data.data.type === 'genius') {
+          props.history.push('index.html');
+        } else {
+          props.history.push('index.html');
+        }
 			} else {
         Toast.info(res.data.msg, 1);
       }
@@ -101,4 +108,9 @@ const Register = props => {
     </div>
   );
 };
-export default withRouter(Register);
+const mapDispatchToProps = dispatch => ({
+  changeUserInfo: userInfo => {
+    dispatch(changeUserInfo(userInfo));
+  },
+})
+export default connect(null, mapDispatchToProps)(withRouter(Register));

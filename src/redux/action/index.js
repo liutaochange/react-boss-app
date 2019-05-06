@@ -1,14 +1,9 @@
-/**
- * action
- * 管理事件类型
- */
-
 export const type = {
-  SWITCH_MENU: "switch-menu"
+  USER_INFO: "__USER_INFO__"
 };
-export const menuSwitch = menuName => {
+export const changeUserInfo = userInfo => {
   return {
-    type: type.SWITCH_MENU,
-    menuName
+    type: type.USER_INFO,
+    userInfo
   };
 };
