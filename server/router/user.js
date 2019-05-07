@@ -56,19 +56,29 @@ router.post("/login", async ctx => {
   if (userInfo && userInfo.user && userInfo.password) {
     let { user, password } = userInfo;
     let result = await userModel.findOne({ name: user }).exec();
-    if (result && result.name === user && result.password === password) {
-      // 生成token, secret作为密钥，expiresIn为失效时间，看情况，一般也不会太久
-      const token = jwt.sign({ user }, screct, { expiresIn: "5h" });
-      await userModel.findOneAndUpdate({name: user}, {token}).exec();
-      ctx.body = {
-        code: 0,
-        data: {
-          user: user,
-          type: result.type,
-          token,
-        },
-        msg: "登录成功"
-      };
+    if (result && result.name === user) {
+      let newUserModel = new userModel()
+      let isMatch = await newUserModel.comparePassword(password, result.password)
+      if (isMatch) {
+        // 生成token, secret作为密钥，expiresIn为失效时间，看情况，一般也不会太久
+        const token = jwt.sign({ user }, screct, { expiresIn: "5h" });
+        await userModel.findOneAndUpdate({name: user}, {token}).exec();
+        ctx.body = {
+          code: 0,
+          data: {
+            user: user,
+            type: result.type,
+            token,
+          },
+          msg: "登录成功"
+        };
+      } else {
+        ctx.body = {
+          code: 1,
+          data: {},
+          msg: "用户密码不匹配"
+        };
+      }
     } else {
       ctx.body = {
         code: 1,

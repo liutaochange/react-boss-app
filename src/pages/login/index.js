@@ -4,7 +4,16 @@ import { List, InputItem, WingBlank, WhiteSpace, Button, Toast } from "antd-mobi
 import { withRouter } from "react-router-dom";
 import { login } from "@/api/index";
 import Store from "Assets/js/utils";
+import { connect } from "react-redux";
+import { changeUserInfo } from 'Redux/action/index';
 const Login = props => {
+  if (props.isLogin) {
+    if (props.info.type === 'genius') {
+      props.history.push('index.html');
+    } else {
+      props.history.push('index.html');
+    }
+  }
   let [user, setUser] = useState("");
   let [password, setPassword] = useState("");
   const submitLogin = () => {
@@ -19,6 +28,7 @@ const Login = props => {
     login(user, password).then(res => {
       if (res.data.code === 0) {
         Store.set('__USER_INFO__', res.data.data);
+        props.changeUserInfo(res.data.data);
         if (res.data.data.type === 'genius') {
           props.history.push('index.html');
         } else {
@@ -68,5 +78,15 @@ const Login = props => {
     </div>
   );
 };
-
-export default withRouter(Login);
+const mapStateToProps = ({ user }) => {
+  return {
+    isLogin: user.isLogin,
+    info: user.info,
+  };
+};
+const mapDispatchToProps = dispatch => ({
+  changeUserInfo: userInfo => {
+    dispatch(changeUserInfo(userInfo));
+  },
+})
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login));

@@ -15,6 +15,13 @@ import { connect } from "react-redux";
 import Store from "Assets/js/utils";
 import { changeUserInfo } from 'Redux/action/index';
 const Register = props => {
+  if (props.isLogin) {
+    if (props.info.type === 'genius') {
+      props.history.push('index.html');
+    } else {
+      props.history.push('index.html');
+    }
+  }
   let [user, setUser] = useState("");
   let [password, setPassword] = useState("");
   let [repeatpwd, setRepeatpwd] = useState("");
@@ -108,9 +115,15 @@ const Register = props => {
     </div>
   );
 };
+const mapStateToProps = ({ user }) => {
+  return {
+    isLogin: user.isLogin,
+    info: user.info,
+  };
+};
 const mapDispatchToProps = dispatch => ({
   changeUserInfo: userInfo => {
     dispatch(changeUserInfo(userInfo));
   },
 })
-export default connect(null, mapDispatchToProps)(withRouter(Register));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Register));

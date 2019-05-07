@@ -22,20 +22,28 @@ export const register = (user, password, type) =>
 
 // 拦截请求, 在header中添加token
 request.interceptors.request.use(function(request) {
-  request.headers = {
-    ...request.headers,
-    Authentication:
-      (Store.get("__USER_INFO__") && Store.get("__USER_INFO__").token) || ""
-  };
-  console.log(request);
-  return request;
+  const token = (Store.get("__USER_INFO__") && Store.get("__USER_INFO__").token) || ""
+  if (!token && request.url !== '/user/login' && request.url !== '/user/register') {
+    Toast.info("您已离线，请重新登录", 1);
+    Store.remove("__USER_INFO__");
+    setTimeout(() => {
+      window.location.href = "/login.html";
+    }, 1000);
+  } else {
+    request.headers = {
+      ...request.headers,
+      Authentication:
+        (Store.get("__USER_INFO__") && Store.get("__USER_INFO__").token) || ""
+    };
+    return request;
+  }
 });
 
 // 拦截相应
 request.interceptors.response.use(function(response) {
-  console.log(response);
   if (response.status === "401") {
     Toast.info("您已离线，请重新登录", 1);
+    Store.remove("__USER_INFO__");
     setTimeout(() => {
       window.location.href = "/login.html";
     }, 1000);
