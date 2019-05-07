@@ -6,24 +6,36 @@ const request = axios.create({
   withCredentials: true
 });
 
-// 获取用户信息
+// 登录
 export const login = (user, password) =>
   request.post("/user/login", {
     user,
     password
   });
-// 增加用户
+// 注册
 export const register = (user, password, type) =>
   request.post("/user/register", {
     user,
     password,
     type
   });
+// 完善用户信息
+export const update = info =>
+  request.post("/user/update", {
+    user: (Store.get("__USER_INFO__") && Store.get("__USER_INFO__").user) || "",
+    type: (Store.get("__USER_INFO__") && Store.get("__USER_INFO__").type) || "",
+    ...info
+  });
 
 // 拦截请求, 在header中添加token
 request.interceptors.request.use(function(request) {
-  const token = (Store.get("__USER_INFO__") && Store.get("__USER_INFO__").token) || ""
-  if (!token && request.url !== '/user/login' && request.url !== '/user/register') {
+  const token =
+    (Store.get("__USER_INFO__") && Store.get("__USER_INFO__").token) || "";
+  if (
+    !token &&
+    request.url !== "/user/login" &&
+    request.url !== "/user/register"
+  ) {
     Toast.info("您已离线，请重新登录", 1);
     Store.remove("__USER_INFO__");
     setTimeout(() => {

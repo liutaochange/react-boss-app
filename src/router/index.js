@@ -9,6 +9,8 @@ import Loading from "Components/loading/index.js";
 const App = lazy(() => import("@/App.js"));
 const Login = lazy(() => import("Pages/login"));
 const Register = lazy(() => import("Pages/register"));
+const Boss = lazy(() => import("Pages/boss"));
+const Genius = lazy(() => import("Pages/genius"));
 const Routers = () => (
   <Router>
     <Suspense
@@ -30,6 +32,16 @@ const Routers = () => (
           exact
           path="/register.html"
           component={props => <Register {...props} />}
+        />
+        <Route
+          exact
+          path="/boss.html"
+          component={props => <Boss {...props} />}
+        />
+        <Route
+          exact
+          path="/genius.html"
+          component={props => <Genius {...props} />}
         />
       </Switch>
     </Suspense>

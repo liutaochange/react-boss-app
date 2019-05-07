@@ -8,6 +8,11 @@ const UserSchema = new Schema({
   password: String,
   type: String,
   token: String,
+  avatar: String,
+  title: String,
+  desc: String,
+  company: String,
+  money: String,
   date: { type: Date, default: Date.now }
 });
 

@@ -13,14 +13,17 @@ import { withRouter } from "react-router-dom";
 import { register } from "@/api/index";
 import { connect } from "react-redux";
 import Store from "Assets/js/utils";
-import { changeUserInfo } from 'Redux/action/index';
+import { changeUserInfo } from "Redux/action/index";
 const Register = props => {
-  if (props.isLogin) {
-    if (props.info.type === 'genius') {
-      props.history.push('index.html');
+  const linkTo = type => {
+    if (type === "genius") {
+      props.history.push("genius.html");
     } else {
-      props.history.push('index.html');
+      props.history.push("boss.html");
     }
+  };
+  if (props.isLogin) {
+    linkTo(props.info.type);
   }
   let [user, setUser] = useState("");
   let [password, setPassword] = useState("");
@@ -34,26 +37,24 @@ const Register = props => {
     if (password === "" || password.length < 6) {
       Toast.info("密码不能少于6位", 1);
       return false;
-		}
-		if (password !== repeatpwd) {
+    }
+    if (password !== repeatpwd) {
       Toast.info("密码不一致", 1);
       return false;
     }
-		register(user, password, type).then(res => {
-			if (res.data.code === 0) {
-        Store.set("__USER_INFO__", res.data.data);
-        props.changeUserInfo(res.data.data)
-				if (res.data.data.type === 'genius') {
-          props.history.push('index.html');
+    register(user, password, type)
+      .then(res => {
+        if (res.data.code === 0) {
+          Store.set("__USER_INFO__", res.data.data);
+          props.changeUserInfo(res.data.data);
+          linkTo(res.data.data.type);
         } else {
-          props.history.push('index.html');
+          Toast.info(res.data.msg, 1);
         }
-			} else {
-        Toast.info(res.data.msg, 1);
-      }
-		}).catch(err => {
-			console.log(err);
-		});
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
   const RadioItem = Radio.RadioItem;
   return (
@@ -93,16 +94,16 @@ const Register = props => {
           <RadioItem
             checked={type === "genius"}
             onChange={() => {
-							setType("genius")
-						}}
+              setType("genius");
+            }}
           >
             牛人
           </RadioItem>
           <RadioItem
             checked={type === "boss"}
             onChange={() => {
-							setType("boss")
-						}}
+              setType("boss");
+            }}
           >
             BOSS
           </RadioItem>
@@ -118,12 +119,15 @@ const Register = props => {
 const mapStateToProps = ({ user }) => {
   return {
     isLogin: user.isLogin,
-    info: user.info,
+    info: user.info
   };
 };
 const mapDispatchToProps = dispatch => ({
   changeUserInfo: userInfo => {
     dispatch(changeUserInfo(userInfo));
-  },
-})
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Register));
+  }
+});
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Register));

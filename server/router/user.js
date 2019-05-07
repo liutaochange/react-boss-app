@@ -93,4 +93,39 @@ router.post("/login", async ctx => {
     };
   }
 });
+
+router.post("/user/update", async ctx => {
+  const userInfo = ctx.request.body;
+  if (userInfo && userInfo.user && userInfo.type) {
+    let { user } = userInfo;
+    let result = await userModel.findOne({ name: user }).exec();
+    if (result && result.name === user) {
+      let res = await userModel.findOneAndUpdate({name: user}, userInfo).exec();
+      console.log(res);
+      if (result.type === 'genius') {
+        ctx.body = {
+          code: 0,
+          data: {
+            user: user,
+            type: result.type,
+            token: result.token,
+          },
+          msg: "更新成功"
+        };
+      }
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: "用户不存在",
+        data: {}
+      };
+    }
+  } else {
+    ctx.body = {
+      code: 1,
+      msg: "请求参数错误"
+    };
+  }
+});
+
 module.exports = router;
