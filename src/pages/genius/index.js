@@ -27,6 +27,9 @@ const Genius = props => {
         if (res.data.code === 0) {
           Store.set("__USER_INFO__", res.data.data);
           Toast.info("保存成功", 1);
+          setTimeout(() => {
+            props.history.push("geniusList.html");
+          }, 1000);
         } else {
           Toast.info(res.dada.msg, 1);
         }
@@ -40,7 +43,7 @@ const Genius = props => {
     <div>
       <NavBar mode="dark">牛人完善信息页</NavBar>
       <AvatarSelector
-        icon={info.avatar || ''}
+        icon={info.avatar || ""}
         selectAvatar={imgname => {
           setInfo(info => ({
             ...info,
@@ -48,9 +51,11 @@ const Genius = props => {
           }));
         }}
       />
-      <InputItem value={info.title || ''} onChange={v => onChange("title", v)}>求职岗位</InputItem>
+      <InputItem value={info.title || ""} onChange={v => onChange("title", v)}>
+        求职岗位
+      </InputItem>
       <TextareaItem
-        value={info.desc || ''}
+        value={info.desc || ""}
         onChange={v => onChange("desc", v)}
         rows={3}
         autoHeight

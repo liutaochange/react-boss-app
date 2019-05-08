@@ -29,6 +29,9 @@ const Boss = props => {
         if (res.data.code === 0) {
           Store.set("__USER_INFO__", res.data.data);
           Toast.info("保存成功", 1);
+          setTimeout(() => {
+            props.history.push("bossList.html");
+          }, 1000);
         } else {
           Toast.info(res.dada.msg, 1);
         }

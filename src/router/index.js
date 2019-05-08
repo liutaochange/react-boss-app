@@ -11,6 +11,8 @@ const Login = lazy(() => import("Pages/login"));
 const Register = lazy(() => import("Pages/register"));
 const Boss = lazy(() => import("Pages/boss"));
 const Genius = lazy(() => import("Pages/genius"));
+const BossList = lazy(() => import("Pages/boss-list"));
+const GeniusList = lazy(() => import("Pages/genius-list"));
 const Routers = () => (
   <Router>
     <Suspense
@@ -42,6 +44,16 @@ const Routers = () => (
           exact
           path="/genius.html"
           component={props => <Genius {...props} />}
+        />
+        <Route
+          exact
+          path="/bossList.html"
+          component={props => <BossList {...props} />}
+        />
+        <Route
+          exact
+          path="/geniusList.html"
+          component={props => <GeniusList {...props} />}
         />
       </Switch>
     </Suspense>
