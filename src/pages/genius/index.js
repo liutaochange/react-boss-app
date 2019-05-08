@@ -12,7 +12,8 @@ const Genius = props => {
   let [info, setInfo] = useState({
     title: "",
     desc: "",
-    avatar: ""
+    avatar: "",
+    ...props.info
   });
   const onChange = (key, val) => {
     setInfo(info => ({
@@ -39,6 +40,7 @@ const Genius = props => {
     <div>
       <NavBar mode="dark">牛人完善信息页</NavBar>
       <AvatarSelector
+        icon={info.avatar || ''}
         selectAvatar={imgname => {
           setInfo(info => ({
             ...info,
@@ -46,8 +48,9 @@ const Genius = props => {
           }));
         }}
       />
-      <InputItem onChange={v => onChange("title", v)}>求职岗位</InputItem>
+      <InputItem value={info.title || ''} onChange={v => onChange("title", v)}>求职岗位</InputItem>
       <TextareaItem
+        value={info.desc || ''}
         onChange={v => onChange("desc", v)}
         rows={3}
         autoHeight
@@ -71,8 +74,7 @@ const mapStateToProps = ({ user }) => {
     info: user.info
   };
 };
-const mapDispatchToProps = dispatch => ({});
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(withRouter(Genius));

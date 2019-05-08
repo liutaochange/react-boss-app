@@ -14,7 +14,8 @@ const Boss = props => {
     desc: "",
     company: "",
     money: "",
-    avatar: ""
+    avatar: "",
+    ...props.info
   });
   const onChange = (key, val) => {
     setInfo(info => ({
@@ -75,8 +76,7 @@ const mapStateToProps = ({ user }) => {
     info: user.info
   };
 };
-const mapDispatchToProps = dispatch => ({});
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(withRouter(Boss));

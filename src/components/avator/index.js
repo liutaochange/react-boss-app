@@ -8,7 +8,9 @@ const AvatarSelector = props => {
       icon: require(`Assets/images/avatar/${v}.png`),
       text: v
     }));
-  let [info, setInfo] = useState({});
+  let [info, setInfo] = useState({
+    icon: require(`Assets/images/avatar/${props.icon}.png`)
+  });
   const gridHeader = info && info.icon ? (
     <div>
       <span>已选择头像</span>
