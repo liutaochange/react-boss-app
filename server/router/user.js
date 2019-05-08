@@ -57,18 +57,21 @@ router.post("/login", async ctx => {
     let { user, password } = userInfo;
     let result = await userModel.findOne({ name: user }).exec();
     if (result && result.name === user) {
-      let newUserModel = new userModel()
-      let isMatch = await newUserModel.comparePassword(password, result.password)
+      let newUserModel = new userModel();
+      let isMatch = await newUserModel.comparePassword(
+        password,
+        result.password
+      );
       if (isMatch) {
         // 生成token, secret作为密钥，expiresIn为失效时间，看情况，一般也不会太久
         const token = jwt.sign({ user }, screct, { expiresIn: "5h" });
-        await userModel.findOneAndUpdate({name: user}, {token}).exec();
+        await userModel.findOneAndUpdate({ name: user }, { token }).exec();
         ctx.body = {
           code: 0,
           data: {
             user: user,
             type: result.type,
-            token,
+            token
           },
           msg: "登录成功"
         };
@@ -94,21 +97,57 @@ router.post("/login", async ctx => {
   }
 });
 
-router.post("/user/update", async ctx => {
+router.post("/update", async ctx => {
   const userInfo = ctx.request.body;
   if (userInfo && userInfo.user && userInfo.type) {
     let { user } = userInfo;
     let result = await userModel.findOne({ name: user }).exec();
     if (result && result.name === user) {
-      let res = await userModel.findOneAndUpdate({name: user}, userInfo).exec();
-      console.log(res);
-      if (result.type === 'genius') {
+      let updateInfo = {};
+      if (userInfo.type === "genius") {
+        updateInfo = {
+          title: userInfo.title,
+          desc: userInfo.desc,
+          avatar: userInfo.avatar
+        };
+      } else {
+        updateInfo = {
+          title: userInfo.title,
+          desc: userInfo.desc,
+          avatar: userInfo.avatar,
+          company: userInfo.company,
+          money: userInfo.money
+        };
+      }
+      // new：bool – 如果为true，返回修改后的文档而不是原始文档。默认为false
+      let res = await userModel
+        .findOneAndUpdate({ name: user }, updateInfo, {new: true})
+        .exec();
+      if (res.type === "genius") {
         ctx.body = {
           code: 0,
           data: {
             user: user,
-            type: result.type,
-            token: result.token,
+            type: res.type,
+            token: res.token,
+            title: res.title,
+            desc: res.desc,
+            avatar: res.avatar
+          },
+          msg: "更新成功"
+        };
+      } else {
+        ctx.body = {
+          code: 0,
+          data: {
+            user: user,
+            type: res.type,
+            token: res.token,
+            title: res.title,
+            desc: res.desc,
+            company: res.company,
+            money: res.money,
+            avatar: res.avatar
           },
           msg: "更新成功"
         };

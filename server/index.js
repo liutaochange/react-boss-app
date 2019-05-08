@@ -15,15 +15,17 @@ require("./mongoose/schema/index");
 // 错误处理, 
 app.use((ctx, next) => {
   return next().catch(err => {
-    console.log(err);
     if (err.status === 401) {
-      ctx.status = 401;
+      ctx.status = 200;
       ctx.body = {
-        code: 1,
+        code: 2,
         msg: 'token 失效，请重新登录'
       };
     } else {
-      ctx.body = "系统异常";
+      ctx.body = {
+        code: 1,
+        msg: '系统异常'
+      };
     }
   });
 });

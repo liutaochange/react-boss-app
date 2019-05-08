@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { NavBar, InputItem, TextareaItem, Button } from "antd-mobile";
+import { NavBar, InputItem, TextareaItem, Button, Toast } from "antd-mobile";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import AvatarSelector from "Components/avator/index";
+import { update } from "@/api/index";
+import Store from "Assets/js/utils";
 const Boss = props => {
   if (!props.isLogin) {
     props.history.push("login.html");
@@ -19,6 +21,21 @@ const Boss = props => {
       ...info,
       [key]: val
     }));
+  };
+  const handleSubmit = () => {
+    update(info)
+      .then(res => {
+        if (res.data.code === 0) {
+          Store.set("__USER_INFO__", res.data.data);
+          Toast.info("保存成功", 1);
+        } else {
+          Toast.info(res.dada.msg, 1);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        Toast.info("系统异常，请重试", 1);
+      });
   };
   return (
     <div>
@@ -42,7 +59,7 @@ const Boss = props => {
       />
       <Button
         onClick={() => {
-          props.update(info);
+          handleSubmit();
         }}
         type="primary"
         style={{ width: "96%", margin: "0 auto" }}

@@ -44,22 +44,29 @@ request.interceptors.request.use(function(request) {
   } else {
     request.headers = {
       ...request.headers,
-      Authentication:
-        (Store.get("__USER_INFO__") && Store.get("__USER_INFO__").token) || ""
+      Authorization:
+        "Bearer " +
+          (Store.get("__USER_INFO__") && Store.get("__USER_INFO__").token) || ""
     };
     return request;
   }
 });
 
-// 拦截相应
-request.interceptors.response.use(function(response) {
-  if (response.status === "401") {
-    Toast.info("您已离线，请重新登录", 1);
-    Store.remove("__USER_INFO__");
-    setTimeout(() => {
-      window.location.href = "/login.html";
-    }, 1000);
-  } else {
-    return response;
+// 拦截响应
+request.interceptors.response.use(
+  response => {
+    if (response.data.code === 2) {
+      Toast.info("您已离线，请重新登录", 1);
+      Store.remove("__USER_INFO__");
+      setTimeout(() => {
+        window.location.href = "/login.html";
+      }, 1000);
+    } else {
+      return response;
+    }
+  },
+  error => {
+    console.log(error)
+    return Promise.reject(error);
   }
-});
+);
