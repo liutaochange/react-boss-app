@@ -26,7 +26,11 @@ export const update = info =>
     type: (Store.get("__USER_INFO__") && Store.get("__USER_INFO__").type) || "",
     ...info
   });
-
+// 获取user列表
+export const getUserList = type =>
+  request.post("/user/list", {
+    type
+  });
 // 拦截请求, 在header中添加token
 request.interceptors.request.use(function(request) {
   const token =

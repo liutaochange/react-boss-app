@@ -9,7 +9,7 @@ const UserCard = props => {
   return (
     <WingBlank>
       <WhiteSpace></WhiteSpace>
-      {this.props.userlist.map(v =>
+      {props.userList.map(v =>
         v.avatar ? (
           <Card key={v._id} onClick={() => handleClick(v)}>
             <Header

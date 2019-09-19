@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const userModel = mongoose.model("user");
 const jwt = require("jsonwebtoken");
 const screct = "react-boss-app";
+// 用户注册
 router.post("/register", async ctx => {
   const userInfo = ctx.request.body;
   if (userInfo && userInfo.user && userInfo.password && userInfo.type) {
@@ -50,7 +51,7 @@ router.post("/register", async ctx => {
     };
   }
 });
-
+// 用户登录
 router.post("/login", async ctx => {
   const userInfo = ctx.request.body;
   if (userInfo && userInfo.user && userInfo.password) {
@@ -97,7 +98,7 @@ router.post("/login", async ctx => {
     };
   }
 });
-
+// 完善用户信息
 router.post("/update", async ctx => {
   const userInfo = ctx.request.body;
   if (userInfo && userInfo.user && userInfo.type) {
@@ -122,7 +123,7 @@ router.post("/update", async ctx => {
       }
       // new：bool – 如果为true，返回修改后的文档而不是原始文档。默认为false
       let res = await userModel
-        .findOneAndUpdate({ name: user }, updateInfo, {new: true})
+        .findOneAndUpdate({ name: user }, updateInfo, { new: true })
         .exec();
       if (res.type === "genius") {
         ctx.body = {
@@ -167,5 +168,22 @@ router.post("/update", async ctx => {
     };
   }
 });
-
+// 获取用户列表
+router.post("/list", async ctx => {
+  const { type } = ctx.request.body;
+  let result = await userModel.find({ type: type }).exec();
+  if (result) {
+    ctx.body = {
+      code: 0,
+      data: result,
+      msg: "查询成功"
+    };
+  } else {
+    ctx.body = {
+      code: 1,
+      data: [],
+      msg: "查询失败"
+    };
+  }
+});
 module.exports = router;
