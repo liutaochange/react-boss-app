@@ -24,6 +24,10 @@ const Boss = props => {
     }));
   };
   const handleSubmit = () => {
+    if (info.company === "" || info.title === "" || info.money === "") {
+      Toast.info("请填写完整信息", 1);
+      return
+    }
     update(info)
       .then(res => {
         if (res.data.code === 0) {

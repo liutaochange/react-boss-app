@@ -9,7 +9,7 @@ const AvatarSelector = props => {
       text: v
     }));
   let [info, setInfo] = useState({
-    icon: require(`Assets/images/avatar/${props.icon}.png`)
+    icon: require(`Assets/images/avatar/${props.icon || 'boy'}.png`)
   });
   const gridHeader = info && info.icon ? (
     <div>

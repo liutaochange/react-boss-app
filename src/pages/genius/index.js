@@ -22,6 +22,10 @@ const Genius = props => {
     }));
   };
   const handleSubmit = () => {
+    if (info.desc === "" || info.title === "") {
+      Toast.info("请填写完整信息", 1);
+      return
+    }
     update(info)
       .then(res => {
         if (res.data.code === 0) {

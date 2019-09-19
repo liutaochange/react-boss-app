@@ -9,7 +9,7 @@
       "Assets/*": ["./assets/*"],
       "Pages/*": ["./pages/*"],
       "Components/*": ["./components/*"],
-      "Redux/*": ["./redux/*"],
+      "Redux/*": ["./redux/*"]
     }
   },
   "exclude": ["node_modules"]
